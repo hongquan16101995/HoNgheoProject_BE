@@ -1,4 +1,4 @@
-package com.codegym.hongheo.core.security;
+package com.codegym.hongheo.core.filter.security;
 
 import com.codegym.hongheo.core.model.dto.PermissionEnum;
 import com.codegym.hongheo.core.model.entity.Permission;
