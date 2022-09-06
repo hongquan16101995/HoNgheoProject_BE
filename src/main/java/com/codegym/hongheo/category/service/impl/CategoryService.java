@@ -1,6 +1,6 @@
 package com.codegym.hongheo.category.service.impl;
 
-import com.codegym.hongheo.category.model.Category;
+import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.category.repository.ICategoryRepository;
 import com.codegym.hongheo.category.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.codegym.hongheo.core.filter.security;
+package com.codegym.hongheo.core.security;
 
 import com.codegym.hongheo.core.filter.JwtAuthenticationFilter;
 import com.codegym.hongheo.core.service.auth.IUserDetailService;
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().ignoringAntMatchers("/**");
         http.authorizeRequests()
                 .antMatchers("/api/login", "/api/register").permitAll()
-                .antMatchers("/api/categories").hasAnyAuthority("")
+                .antMatchers("/api/categories").hasAnyAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

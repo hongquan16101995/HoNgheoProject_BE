@@ -1,6 +1,6 @@
 package com.codegym.hongheo.transaction.model;
 
-import com.codegym.hongheo.category.model.Category;
+import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.wallet.model.Wallet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

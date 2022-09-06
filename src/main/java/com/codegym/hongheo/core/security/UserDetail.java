@@ -1,4 +1,4 @@
-package com.codegym.hongheo.core.filter.security;
+package com.codegym.hongheo.core.security;
 
 import com.codegym.hongheo.core.model.dto.UserConstant;
 import com.codegym.hongheo.core.model.entity.Permission;
