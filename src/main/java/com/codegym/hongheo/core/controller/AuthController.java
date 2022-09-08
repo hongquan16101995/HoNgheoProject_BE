@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @CrossOrigin("*")
 @RestController
@@ -37,6 +39,14 @@ public class AuthController{
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Validated @RequestBody LoginForm loginForm) {
+        Pattern pattern = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(loginForm.getUsername());
+
+        boolean matchFound = matcher.find();
+        if(matchFound){
+            User loginUser = userService.findByEmail(loginForm.getUsername());
+            loginForm.setUsername(loginUser.getUsername());
+        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
 

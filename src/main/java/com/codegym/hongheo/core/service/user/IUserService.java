@@ -9,4 +9,6 @@ public interface IUserService extends ICoreService<User, Long> {
     User findByUsername(String username);
 
     User register(SignUpForm signUpForm);
+
+    User findByEmail(String email);
 }

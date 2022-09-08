@@ -57,4 +57,10 @@ public class UserService implements IUserService {
         user.getRoles().add(new Role(RoleConstant.USER, RoleConstant.ROLE_USER));
         return userRepository.save(user);
     }
+
+    @Override
+    public User findByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        return userOptional.orElse(null);
+    }
 }
