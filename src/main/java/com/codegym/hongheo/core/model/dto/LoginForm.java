@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 @Data
 public class LoginForm {
     @NotNull
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 50)
     private String username;
 
     @NotNull
