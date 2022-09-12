@@ -1,5 +1,6 @@
 package com.codegym.hongheo.core.controller;
 
+import com.codegym.hongheo.core.mapper.UserMapper;
 import com.codegym.hongheo.core.model.dto.UserDTO;
 import com.codegym.hongheo.core.model.entity.User;
 import com.codegym.hongheo.core.service.user.IUserService;
@@ -24,6 +25,9 @@ public class UserController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping
     @PreAuthorize("hasAuthority('GET_USERS')")
     public ResponseEntity<List<User>> getUsers() {
@@ -33,7 +37,7 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<User> createNewUser(@Validated @RequestBody UserDTO userDTO) {
-        User user = convertToEntity(userDTO);
+        User user = userMapper.toEntity(userDTO);
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 
@@ -46,7 +50,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE_USER') || #id == principal.id")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,@Validated @RequestBody UserDTO userDTO, Principal principal) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Validated @RequestBody UserDTO userDTO, Principal principal) {
         Optional<User> userOptional = userService.findById(id);
         if (!userOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
