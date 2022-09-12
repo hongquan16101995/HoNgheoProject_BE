@@ -1,6 +1,6 @@
 package com.codegym.hongheo.transaction.service.impl;
 
-import com.codegym.hongheo.transaction.model.Transaction;
+import com.codegym.hongheo.transaction.model.entity.Transaction;
 import com.codegym.hongheo.transaction.repository.ITransactionRepository;
 import com.codegym.hongheo.transaction.service.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;

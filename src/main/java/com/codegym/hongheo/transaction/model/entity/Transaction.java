@@ -1,4 +1,4 @@
-package com.codegym.hongheo.transaction.model;
+package com.codegym.hongheo.transaction.model.entity;
 
 import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.wallet.model.Wallet;
@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class Transaction {
     private double total;
 
     @Column(columnDefinition = "datetime")
-    private double time;
+    private LocalDateTime time;
 
     @Column(columnDefinition = "longtext")
     private String description;
