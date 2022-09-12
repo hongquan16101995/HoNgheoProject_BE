@@ -37,6 +37,6 @@ public class TransactionMapper implements IMapper<Transaction, TransactionDTO> {
                 .stream().map(value -> iMapperCategory.convertToD(value))
                 .collect(Collectors.toSet());
         transactionDTO.setCategoryDTOSet(categoryDTOSet);
-        return null;
+        return transactionDTO;
     }
 }
