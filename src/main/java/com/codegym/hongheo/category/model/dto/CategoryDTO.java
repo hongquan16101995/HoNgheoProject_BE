@@ -20,7 +20,4 @@ public class CategoryDTO {
 
     @NotNull
     private int status;
-
-    @NotNull
-    private UserDTO userDTO;
 }

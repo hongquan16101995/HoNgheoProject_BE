@@ -4,6 +4,8 @@ import com.codegym.hongheo.category.model.dto.CategoryDTO;
 import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.category.service.ICategoryService;
 import com.codegym.hongheo.core.mapper.IMapper;
+import com.codegym.hongheo.core.model.entity.User;
+import com.codegym.hongheo.core.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
 public class CategoryController {
     @Autowired
     private ICategoryService iCategoryService;
+
+    @Autowired
+    private IUserService iUserService;
 
     @Autowired
     private IMapper<Category, CategoryDTO> iMapperCategory;
@@ -66,5 +71,18 @@ public class CategoryController {
         Optional<Category> categoryOptional = iCategoryService.findById(id);
         return categoryOptional.map(category -> new ResponseEntity<>(iMapperCategory.convertToD(category), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
+    public ResponseEntity<List<CategoryDTO>> findAllCategoriesByUser(@PathVariable("user_id") Long userId) {
+        Optional<User> userOptional = iUserService.findById(userId);
+        if (userOptional.isPresent()) {
+            List<Category> categories = iCategoryService.findAllByUser(userOptional.get());
+            List<CategoryDTO> categoryDTOS = categories.stream().map(value -> iMapperCategory.convertToD(value))
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
