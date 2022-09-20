@@ -1,4 +1,4 @@
-package com.codegym.hongheo.transaction.model;
+package com.codegym.hongheo.transaction.model.entity;
 
 import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.wallet.model.Wallet;
