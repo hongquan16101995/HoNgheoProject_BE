@@ -1,7 +1,6 @@
 package com.codegym.hongheo.transaction.model.dto;
 
 import com.codegym.hongheo.category.model.dto.CategoryDTO;
-import com.codegym.hongheo.wallet.model.Wallet;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -22,7 +21,4 @@ public class TransactionDTO {
 
     @NotNull
     private Set<CategoryDTO> categoryDTOSet;
-
-    @NotNull
-    private Wallet wallet;
 }

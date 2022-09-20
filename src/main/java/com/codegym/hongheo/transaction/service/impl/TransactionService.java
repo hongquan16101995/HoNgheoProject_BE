@@ -3,9 +3,12 @@ package com.codegym.hongheo.transaction.service.impl;
 import com.codegym.hongheo.transaction.model.entity.Transaction;
 import com.codegym.hongheo.transaction.repository.ITransactionRepository;
 import com.codegym.hongheo.transaction.service.ITransactionService;
+import com.codegym.hongheo.wallet.model.Wallet;
+import com.codegym.hongheo.wallet.service.IWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +29,17 @@ public class TransactionService implements ITransactionService {
 
     @Override
     public Transaction save(Transaction transaction) {
+        transaction.setTime(LocalDateTime.now());
         return iTransactionRepository.save(transaction);
     }
 
     @Override
     public void remove(Long id) {
         iTransactionRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Transaction> findAllTransactionByWallet(Wallet wallet) {
+        return iTransactionRepository.findAllByWallet(wallet);
     }
 }
