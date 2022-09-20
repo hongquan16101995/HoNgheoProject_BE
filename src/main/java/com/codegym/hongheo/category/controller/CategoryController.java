@@ -54,7 +54,7 @@ public class CategoryController {
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
         Optional<Category> categoryOptional = iCategoryService.findById(id);
         if (categoryOptional.isPresent()) {
-            categoryOptional.get().setStatus(0);
+            iCategoryService.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
