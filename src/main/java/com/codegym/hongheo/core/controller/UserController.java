@@ -1,6 +1,5 @@
 package com.codegym.hongheo.core.controller;
 
-import com.codegym.hongheo.core.mapper.UserMapper;
 import com.codegym.hongheo.core.model.dto.UserDTO;
 import com.codegym.hongheo.core.model.entity.User;
 import com.codegym.hongheo.core.service.user.IUserService;
@@ -22,11 +21,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private IUserService userService;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private ModelMapper modelMapper;
 
     @GetMapping
     @PreAuthorize("hasAuthority('GET_USERS')")
@@ -37,7 +34,7 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<User> createNewUser(@Validated @RequestBody UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO);
+        User user = convertToEntity(userDTO);
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 

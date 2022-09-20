@@ -1,8 +1,9 @@
 package com.codegym.hongheo.category.service.impl;
 
-import com.codegym.hongheo.category.model.Category;
+import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.category.repository.ICategoryRepository;
 import com.codegym.hongheo.category.service.ICategoryService;
+import com.codegym.hongheo.core.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,10 @@ public class CategoryService implements ICategoryService {
     @Override
     public void remove(Long id) {
         iCategoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Category> findAllByUser(User user) {
+        return iCategoryRepository.findAllByUser(user);
     }
 }

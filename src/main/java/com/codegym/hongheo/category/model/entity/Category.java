@@ -1,4 +1,4 @@
-package com.codegym.hongheo.category.model;
+package com.codegym.hongheo.category.model.entity;
 
 import com.codegym.hongheo.core.model.entity.User;
 import lombok.Getter;
