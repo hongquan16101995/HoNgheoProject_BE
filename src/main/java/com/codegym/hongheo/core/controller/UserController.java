@@ -42,6 +42,9 @@ public class UserController {
     @PreAuthorize("hasAuthority('GET_USER')")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         Optional<User> userOptional = userService.findById(id);
+        User demo = userService.findById(id).orElse(null);
+        UserDTO demoDto = userMapper.toDto(demo);
+        System.out.println(demoDto);
         return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
