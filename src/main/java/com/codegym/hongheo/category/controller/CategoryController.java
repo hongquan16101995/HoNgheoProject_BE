@@ -3,7 +3,9 @@ package com.codegym.hongheo.category.controller;
 import com.codegym.hongheo.category.model.dto.CategoryDTO;
 import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.category.service.ICategoryService;
+import com.codegym.hongheo.category.service.impl.CategoryService;
 import com.codegym.hongheo.core.mapper.IMapper;
+import com.codegym.hongheo.core.model.dto.UserDTO;
 import com.codegym.hongheo.core.model.entity.User;
 import com.codegym.hongheo.core.security.UserDetail;
 import com.codegym.hongheo.core.service.user.IUserService;
@@ -25,6 +27,9 @@ public class CategoryController {
     private ICategoryService iCategoryService;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
     private IUserService iUserService;
 
     @Autowired
@@ -32,67 +37,36 @@ public class CategoryController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<CategoryDTO>> findAllCategories() {
-        List<Category> categories = iCategoryService.findAll();
-        List<CategoryDTO> categoryDTOS = categories.stream().map(value -> iMapperCategory.convertToD(value))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
+        return ResponseEntity.ok(iCategoryService.findAll());
     }
 
     @RequestMapping(value = "/{user_id}", method = RequestMethod.POST)
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO,
                                                       @PathVariable("user_id") Long userId) {
-        Optional<User> userOptional = iUserService.findById(userId);
-        if (userOptional.isPresent()) {
-            Category category = iMapperCategory.convertToE(categoryDTO);
-            category.setUser(userOptional.get());
-            return new ResponseEntity<>(iMapperCategory.convertToD(iCategoryService.save(category)), HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return ResponseEntity.ok(iCategoryService.save(categoryDTO));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") Long id,
                                                       @RequestBody CategoryDTO categoryDTO) {
-        Optional<Category> categoryOptional = iCategoryService.findById(id);
-        if (categoryOptional.isPresent()) {
-            Category category = iMapperCategory.convertToE(categoryDTO);
-            category.setId(id);
-            category.setUser(categoryOptional.get().getUser());
-            return new ResponseEntity<>(iMapperCategory.convertToD(iCategoryService.save(category)), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return ResponseEntity.ok(iCategoryService.save(categoryDTO));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
-        Optional<Category> categoryOptional = iCategoryService.findById(id);
-        if (categoryOptional.isPresent()) {
-            iCategoryService.remove(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        iCategoryService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<CategoryDTO> findCategoryById(@PathVariable("id") Long id) {
-        Optional<Category> categoryOptional = iCategoryService.findById(id);
-        return categoryOptional.map(category -> new ResponseEntity<>(iMapperCategory.convertToD(category), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        CategoryDTO categoryDTO = iCategoryService.findById(id);
+        return ResponseEntity.ok(categoryDTO);
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
     public ResponseEntity<List<CategoryDTO>> findAllCategoriesByUser(@PathVariable("user_id") Long userId) {
-        Optional<User> userOptional = iUserService.findById(userId);
-        if (userOptional.isPresent()) {
-            List<Category> categories = iCategoryService.findAllByUser(userOptional.get());
-            List<CategoryDTO> categoryDTOS = categories.stream().map(value -> iMapperCategory.convertToD(value))
-                    .collect(Collectors.toList());
-            return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        return new ResponseEntity<>(categoryService.findAllCategoryByUser(userId), HttpStatus.OK);
     }
 }

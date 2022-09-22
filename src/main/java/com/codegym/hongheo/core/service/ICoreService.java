@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface ICoreService<T, K>{
     List<T> findAll();
 
-    Optional<T> findById(K id);
+    T findById(K id);
 
     T save(T t);
 
