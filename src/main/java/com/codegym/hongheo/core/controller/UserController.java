@@ -1,5 +1,6 @@
 package com.codegym.hongheo.core.controller;
 
+import com.codegym.hongheo.core.mapper.IUserMapper;
 import com.codegym.hongheo.core.model.dto.UserDTO;
 import com.codegym.hongheo.core.model.entity.User;
 import com.codegym.hongheo.core.service.user.IUserService;
@@ -23,7 +24,7 @@ public class UserController {
     private IUserService userService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private IUserMapper iUserMapper;
 
     @GetMapping
     @PreAuthorize("hasAuthority('GET_USERS')")
@@ -34,7 +35,7 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<User> createNewUser(@Validated @RequestBody UserDTO userDTO) {
-        User user = convertToEntity(userDTO);
+        User user = iUserMapper.toEntity(userDTO);
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 
@@ -43,7 +44,7 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         Optional<User> userOptional = userService.findById(id);
         User demo = userService.findById(id).orElse(null);
-        UserDTO demoDto = userMapper.toDto(demo);
+        UserDTO demoDto = iUserMapper.toDto(demo);
         System.out.println(demoDto);
         return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -58,7 +59,7 @@ public class UserController {
         return userOptional.map(user -> {
             user.setName(userDTO.getName());
             user.setPhone(userDTO.getPhone());
-            return new ResponseEntity<>(convertToDto(userService.save(user)), HttpStatus.OK);
+            return new ResponseEntity<>(iUserMapper.toDto(userService.save(user)), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -71,13 +72,5 @@ public class UserController {
         }
         userService.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private UserDTO convertToDto(User user) {
-        return modelMapper.map(user, UserDTO.class);
-    }
-
-    private User convertToEntity(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
     }
 }
