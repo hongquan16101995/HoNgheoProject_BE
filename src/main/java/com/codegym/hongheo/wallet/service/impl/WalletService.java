@@ -1,5 +1,6 @@
 package com.codegym.hongheo.wallet.service.impl;
 
+import com.codegym.hongheo.core.model.entity.User;
 import com.codegym.hongheo.wallet.model.entity.Wallet;
 import com.codegym.hongheo.wallet.repository.IWalletRepository;
 import com.codegym.hongheo.wallet.service.IWalletService;
@@ -38,5 +39,10 @@ public class WalletService implements IWalletService {
     public Wallet findByName(String name) {
         Optional<Wallet> walletOptional = iWalletRepository.findByName(name);
         return walletOptional.orElse(null);
+    }
+
+    @Override
+    public List<Wallet> findAllByUser(User user) {
+        return iWalletRepository.findAllByUser(user);
     }
 }

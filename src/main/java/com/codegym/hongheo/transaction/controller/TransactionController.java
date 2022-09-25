@@ -4,7 +4,7 @@ import com.codegym.hongheo.core.mapper.ITransactionMapper;
 import com.codegym.hongheo.transaction.model.dto.TransactionDTO;
 import com.codegym.hongheo.transaction.model.entity.Transaction;
 import com.codegym.hongheo.transaction.service.ITransactionService;
-import com.codegym.hongheo.wallet.model.Wallet;
+import com.codegym.hongheo.wallet.model.entity.Wallet;
 import com.codegym.hongheo.wallet.service.IWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
