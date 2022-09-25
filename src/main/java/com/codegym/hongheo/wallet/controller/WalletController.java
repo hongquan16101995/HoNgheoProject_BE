@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("*")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/wallets")
 public class WalletController {
     @Autowired
@@ -95,4 +95,15 @@ public class WalletController {
         }
     }
 
+    @RequestMapping(value = "/user_active/{user_id}", method = RequestMethod.GET)
+    public ResponseEntity<List<WalletDTO>> findAllByUserAndStatus(@PathVariable("user_id") Long userId) {
+        Optional<User> userOptional = iUserService.findById(userId);
+        if (userOptional.isPresent()) {
+            List<Wallet> wallets = iWalletService.findAllByUserAndStatus(userOptional.get());
+            List<WalletDTO> walletDTOS = iWalletMapper.toDto(wallets);
+            return new ResponseEntity<>(walletDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

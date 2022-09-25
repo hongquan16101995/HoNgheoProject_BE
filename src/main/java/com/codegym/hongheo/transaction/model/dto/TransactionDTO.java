@@ -1,7 +1,9 @@
 package com.codegym.hongheo.transaction.model.dto;
 
 import com.codegym.hongheo.category.model.dto.CategoryDTO;
+import com.codegym.hongheo.category.model.entity.Category;
 import lombok.Data;
+import org.mapstruct.Mapper;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -20,5 +22,5 @@ public class TransactionDTO {
     private String description;
 
     @NotNull
-    private Set<CategoryDTO> categoryDTOSet;
+    private Set<CategoryDTO> categories;
 }

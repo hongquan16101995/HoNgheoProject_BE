@@ -10,4 +10,6 @@ public interface IWalletService extends ICoreService<Wallet, Long> {
     Wallet findByName(String name);
 
     List<Wallet> findAllByUser(User user);
+
+    List<Wallet> findAllByUserAndStatus(User user);
 }

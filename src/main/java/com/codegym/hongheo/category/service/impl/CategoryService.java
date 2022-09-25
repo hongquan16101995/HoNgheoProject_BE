@@ -39,4 +39,9 @@ public class CategoryService implements ICategoryService {
     public List<Category> findAllByUser(User user) {
         return iCategoryRepository.findAllByUser(user);
     }
+
+    @Override
+    public List<Category> findAllByUserAndStatus(User user) {
+        return iCategoryRepository.findAllByUserAndStatus(user, 1);
+    }
 }

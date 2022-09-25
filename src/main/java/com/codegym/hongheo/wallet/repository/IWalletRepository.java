@@ -13,4 +13,6 @@ public interface IWalletRepository extends JpaRepository<Wallet, Long> {
     Optional<Wallet> findByName(String name);
 
     List<Wallet> findAllByUser(User user);
+
+    List<Wallet> findAllByUserAndStatus(User user, int status);
 }

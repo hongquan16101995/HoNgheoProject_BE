@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ICategoryService extends ICoreService<Category, Long> {
     List<Category> findAllByUser(User user);
+
+    List<Category> findAllByUserAndStatus(User user);
 }

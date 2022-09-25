@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("*")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/categories")
 public class CategoryController {
     @Autowired
@@ -84,6 +84,18 @@ public class CategoryController {
         Optional<User> userOptional = iUserService.findById(userId);
         if (userOptional.isPresent()) {
             List<Category> categories = iCategoryService.findAllByUser(userOptional.get());
+            List<CategoryDTO> categoryDTOS = iCategoryMapper.toDto(categories);
+            return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "/user_active/{user_id}", method = RequestMethod.GET)
+    public ResponseEntity<List<CategoryDTO>> findAllCategoriesByUserAndStatus(@PathVariable("user_id") Long userId) {
+        Optional<User> userOptional = iUserService.findById(userId);
+        if (userOptional.isPresent()) {
+            List<Category> categories = iCategoryService.findAllByUserAndStatus(userOptional.get());
             List<CategoryDTO> categoryDTOS = iCategoryMapper.toDto(categories);
             return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
         } else {

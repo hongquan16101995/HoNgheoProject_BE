@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByUser(User user);
+
+    List<Category> findAllByUserAndStatus(User user, int status);
 }

@@ -45,4 +45,9 @@ public class WalletService implements IWalletService {
     public List<Wallet> findAllByUser(User user) {
         return iWalletRepository.findAllByUser(user);
     }
+
+    @Override
+    public List<Wallet> findAllByUserAndStatus(User user) {
+        return iWalletRepository.findAllByUserAndStatus(user, 1);
+    }
 }

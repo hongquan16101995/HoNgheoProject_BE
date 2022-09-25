@@ -48,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers("/**");
         http.authorizeRequests()
-                .antMatchers("/api/login", "/api/register", "/api/wallets/**").permitAll()
-                .antMatchers("/api/categories").hasAnyAuthority("ROLE_USER")
+                .antMatchers("/api/login", "/api/register", "/api/wallets/**", "/api/categories/**", "/api/transactions/**").permitAll()
+//                .antMatchers("/api/categories/**").hasAnyAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
