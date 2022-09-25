@@ -1,8 +1,6 @@
 package com.codegym.hongheo.transaction.controller;
 
-import com.codegym.hongheo.category.model.dto.CategoryDTO;
-import com.codegym.hongheo.category.model.entity.Category;
-import com.codegym.hongheo.core.mapper.IMapper;
+import com.codegym.hongheo.core.mapper.ITransactionMapper;
 import com.codegym.hongheo.transaction.model.dto.TransactionDTO;
 import com.codegym.hongheo.transaction.model.entity.Transaction;
 import com.codegym.hongheo.transaction.service.ITransactionService;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -28,13 +25,12 @@ public class TransactionController {
     private IWalletService iWalletService;
 
     @Autowired
-    private IMapper<Transaction, TransactionDTO> iMapperTransaction;
+    private ITransactionMapper iTransactionMapper;
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<TransactionDTO>> findAllTransactions() {
         List<Transaction> transactions = iTransactionService.findAll();
-        List<TransactionDTO> transactionDTOS = transactions.stream().map(value -> iMapperTransaction.convertToD(value))
-                .collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOS = iTransactionMapper.toDto(transactions);
         return new ResponseEntity<>(transactionDTOS, HttpStatus.OK);
     }
 
@@ -42,11 +38,11 @@ public class TransactionController {
     public ResponseEntity<TransactionDTO> createTransaction(@PathVariable("wallet_id") Long walletId,
                                                             @RequestBody TransactionDTO transactionDTO) {
         Optional<Wallet> walletOptional = iWalletService.findById(walletId);
-        Transaction transaction = iMapperTransaction.convertToE(transactionDTO);
+        Transaction transaction = iTransactionMapper.toEntity(transactionDTO);
         if (walletOptional.isPresent()) {
             transaction.setWallet(walletOptional.get());
             iTransactionService.save(transaction);
-            return new ResponseEntity<>(iMapperTransaction.convertToD(iTransactionService.save(transaction)), HttpStatus.CREATED);
+            return new ResponseEntity<>(iTransactionMapper.toDto(iTransactionService.save(transaction)), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -57,10 +53,10 @@ public class TransactionController {
                                                             @RequestBody TransactionDTO transactionDTO) {
         Optional<Transaction> transactionOptional = iTransactionService.findById(id);
         if (transactionOptional.isPresent()) {
-            Transaction transaction = iMapperTransaction.convertToE(transactionDTO);
+            Transaction transaction = iTransactionMapper.toEntity(transactionDTO);
             transaction.setId(id);
             transaction.setWallet(transactionOptional.get().getWallet());
-            return new ResponseEntity<>(iMapperTransaction.convertToD(iTransactionService.save(transaction)), HttpStatus.OK);
+            return new ResponseEntity<>(iTransactionMapper.toDto(iTransactionService.save(transaction)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -80,7 +76,7 @@ public class TransactionController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<TransactionDTO> findTransactionById(@PathVariable("id") Long id) {
         Optional<Transaction> transactionOptional = iTransactionService.findById(id);
-        return transactionOptional.map(category -> new ResponseEntity<>(iMapperTransaction.convertToD(category), HttpStatus.OK))
+        return transactionOptional.map(category -> new ResponseEntity<>(iTransactionMapper.toDto(category), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -89,8 +85,7 @@ public class TransactionController {
         Optional<Wallet> walletOptional = iWalletService.findById(walletId);
         if (walletOptional.isPresent()) {
             List<Transaction> transactions = iTransactionService.findAllTransactionByWallet(walletOptional.get());
-            List<TransactionDTO> transactionDTOS = transactions.stream().map(value -> iMapperTransaction.convertToD(value))
-                    .collect(Collectors.toList());
+            List<TransactionDTO> transactionDTOS = iTransactionMapper.toDto(transactions);
             return new ResponseEntity<>(transactionDTOS, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
