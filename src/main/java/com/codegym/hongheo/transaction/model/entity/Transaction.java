@@ -1,7 +1,7 @@
 package com.codegym.hongheo.transaction.model.entity;
 
 import com.codegym.hongheo.category.model.entity.Category;
-import com.codegym.hongheo.wallet.model.Wallet;
+import com.codegym.hongheo.wallet.model.entity.Wallet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

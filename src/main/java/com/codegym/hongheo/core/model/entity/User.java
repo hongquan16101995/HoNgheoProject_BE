@@ -19,6 +19,9 @@ public class User {
     private Long id;
 
     @Column(columnDefinition = "varchar(50)", unique = true, nullable = false)
+    private String email;
+
+    @Column(columnDefinition = "varchar(50)", unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)

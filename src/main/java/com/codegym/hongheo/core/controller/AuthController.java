@@ -51,6 +51,7 @@ public class AuthController{
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@Validated @RequestBody SignUpForm signUpForm) {
+        System.out.println(signUpForm);
         return new ResponseEntity<>(userService.register(signUpForm), HttpStatus.OK);
     }
 }
