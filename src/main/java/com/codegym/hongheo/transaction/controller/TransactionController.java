@@ -3,6 +3,7 @@ package com.codegym.hongheo.transaction.controller;
 import com.codegym.hongheo.category.model.dto.CategoryDTO;
 import com.codegym.hongheo.core.mapper.ICategoryMapper;
 import com.codegym.hongheo.core.mapper.ITransactionMapper;
+import com.codegym.hongheo.transaction.model.dto.Search;
 import com.codegym.hongheo.transaction.model.dto.TransactionDTO;
 import com.codegym.hongheo.transaction.model.entity.Transaction;
 import com.codegym.hongheo.transaction.service.ITransactionService;
@@ -13,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -92,6 +96,19 @@ public class TransactionController {
             return new ResponseEntity<>(transactionDTOS, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ResponseEntity<List<TransactionDTO>> searchByDate(@RequestBody Search search) {
+        LocalDateTime start = LocalDateTime.parse(search.getStart(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        LocalDateTime end = LocalDateTime.parse(search.getEnd(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        List<Transaction> transactions = iTransactionService.findAllTransactionByTime(start, end);
+        if (!transactions.isEmpty()) {
+            List<TransactionDTO> transactionDTOS = iTransactionMapper.toDto(transactions);
+            return new ResponseEntity<>(transactionDTOS, HttpStatus.OK);
+        } else  {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

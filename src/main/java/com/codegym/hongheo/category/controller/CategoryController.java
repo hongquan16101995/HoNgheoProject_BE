@@ -102,4 +102,17 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @RequestMapping(value = "/{id}/{status}", method = RequestMethod.GET)
+    public ResponseEntity<CategoryDTO> updateStatusCategory(@PathVariable("id") Long id,
+                                                        @PathVariable("status") int status) {
+        Optional<Category> categoryOptional = iCategoryService.findById(id);
+        if (categoryOptional.isPresent()) {
+            categoryOptional.get().setStatus(status);
+            return new ResponseEntity<>(iCategoryMapper.toDto(iCategoryService.save(categoryOptional.get())),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

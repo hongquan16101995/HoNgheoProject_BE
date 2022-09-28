@@ -42,4 +42,9 @@ public class TransactionService implements ITransactionService {
     public List<Transaction> findAllTransactionByWallet(Wallet wallet) {
         return iTransactionRepository.findAllByWallet(wallet);
     }
+
+    @Override
+    public List<Transaction> findAllTransactionByTime(LocalDateTime start, LocalDateTime end) {
+        return iTransactionRepository.findAllByTimeBetween(start, end);
+    }
 }

@@ -106,4 +106,17 @@ public class WalletController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @RequestMapping(value = "/{id}/{status}", method = RequestMethod.GET)
+    public ResponseEntity<WalletDTO> updateStatusWallet(@PathVariable("id") Long id,
+                                                        @PathVariable("status") int status) {
+        Optional<Wallet> walletOptional = iWalletService.findById(id);
+        if (walletOptional.isPresent()) {
+            walletOptional.get().setStatus(status);
+            return new ResponseEntity<>(iWalletMapper.toDto(iWalletService.save(walletOptional.get())),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
