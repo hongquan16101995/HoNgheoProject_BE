@@ -47,4 +47,9 @@ public class TransactionService implements ITransactionService {
     public List<Transaction> findAllTransactionByTime(LocalDateTime start, LocalDateTime end) {
         return iTransactionRepository.findAllByTimeBetween(start, end);
     }
+
+    @Override
+    public boolean checkMoney(Transaction transaction, Wallet wallet) {
+        return transaction.getTotal() < wallet.getMoney();
+    }
 }

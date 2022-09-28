@@ -11,4 +11,6 @@ public interface ITransactionService extends ICoreService<Transaction, Long> {
     List<Transaction> findAllTransactionByWallet(Wallet wallet);
 
     List<Transaction> findAllTransactionByTime(LocalDateTime start, LocalDateTime end);
+
+    boolean checkMoney(Transaction transaction, Wallet wallet);
 }
