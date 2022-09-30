@@ -118,4 +118,9 @@ public class TransactionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @RequestMapping(value = "/demo", method = RequestMethod.GET)
+    public ResponseEntity<Void> demo() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
