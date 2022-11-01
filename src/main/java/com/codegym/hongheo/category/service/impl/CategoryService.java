@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public List<CategoryDTO> findAll() {
-        List<Category> categories = iCategoryRepository.findAll();
+        List<Category> categories = iCategoryRepository.findAllByNotDelete();
         return iCategoryMapper.toDto(categories);
     }
 
@@ -34,7 +35,9 @@ public class CategoryService implements ICategoryService {
     public Optional<CategoryDTO> findById(Long id) {
         Optional<Category> categoryOptional = iCategoryRepository.findById(id);
         CategoryDTO categoryDTO = null;
-        if (categoryOptional.isPresent()) {
+        if (categoryOptional.isPresent()
+                && categoryOptional.get().getDeleteAt() == null
+                && checkUserId(categoryOptional.get())) {
             categoryDTO = iCategoryMapper.toDto(categoryOptional.get());
         }
         return Optional.ofNullable(categoryDTO);
@@ -44,7 +47,7 @@ public class CategoryService implements ICategoryService {
     public CategoryDTO save(CategoryDTO categoryDTO) {
         if (categoryDTO.getId() != null) {
             Optional<Category> categoryOptional = iCategoryRepository.findById(categoryDTO.getId());
-            if (!categoryOptional.isPresent()) {
+            if (!categoryOptional.isPresent() || categoryOptional.get().getDeleteAt() != null) {
                 return null;
             }
         }
@@ -56,7 +59,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void remove(Long id) {
         Optional<Category> categoryOptional = iCategoryRepository.findById(id);
-        if (categoryOptional.isPresent()) {
+        if (categoryOptional.isPresent() && checkUserId(categoryOptional.get())) {
             categoryOptional.get().setDeleteAt(LocalDateTime.now());
             iCategoryRepository.save(categoryOptional.get());
         }
@@ -78,9 +81,15 @@ public class CategoryService implements ICategoryService {
     @Override
     public void isActive(Long id) {
         Optional<Category> categoryOptional = iCategoryRepository.findById(id);
-        if (categoryOptional.isPresent()) {
+        if (categoryOptional.isPresent()
+                && categoryOptional.get().getDeleteAt() == null
+                && checkUserId(categoryOptional.get())) {
             categoryOptional.get().setStatus(!categoryOptional.get().isStatus());
             iCategoryRepository.save(categoryOptional.get());
         }
+    }
+
+    private boolean checkUserId(Category category) {
+        return Objects.equals(category.getUser().getId(), (jwtService.getIdOfUserWithJwt()));
     }
 }

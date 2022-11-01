@@ -60,6 +60,8 @@ public class JwtService {
     }
 
     public User getUserWithJwt() {
-        return (User)(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        User user = new User();
+        user.setId(getIdOfUserWithJwt());
+        return user;
     }
 }

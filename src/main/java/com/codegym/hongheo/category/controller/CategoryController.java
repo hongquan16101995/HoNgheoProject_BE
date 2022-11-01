@@ -31,14 +31,14 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") Long id,
                                                       @RequestBody CategoryDTO categoryDTO) {
         categoryDTO.setId(id);
-        return new ResponseEntity<>(iCategoryService.save(categoryDTO), HttpStatus.OK);
+        return new ResponseEntity<>(iCategoryService.save(categoryDTO), HttpStatus.ACCEPTED);
 
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
         iCategoryService.remove(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

@@ -10,9 +10,12 @@ import java.util.List;
 
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Long> {
-    @Query(value = "select * from category where user_id = :id",nativeQuery = true)
+    @Query(value = "select * from category where user_id = :id and delete_at is null",nativeQuery = true)
     List<Category> findAllByUser(@Param("id") Long id);
 
-    @Query(value = "select * from category where user_id = :id and status = 1",nativeQuery = true)
+    @Query(value = "select * from category where user_id = :id and status = 1 and delete_at is null",nativeQuery = true)
     List<Category> findAllByUserAndStatus(@Param("id") Long id);
+
+    @Query(value = "select * from category where delete_at is null",nativeQuery = true)
+    List<Category> findAllByNotDelete();
 }
