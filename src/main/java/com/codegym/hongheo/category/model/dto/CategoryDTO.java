@@ -1,6 +1,5 @@
 package com.codegym.hongheo.category.model.dto;
 
-import com.codegym.hongheo.core.model.dto.UserDTO;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -19,5 +18,5 @@ public class CategoryDTO {
     private String description;
 
     @NotNull
-    private int status;
+    private boolean status;
 }

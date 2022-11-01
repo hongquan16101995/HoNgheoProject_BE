@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "category")
@@ -26,8 +27,11 @@ public class Category {
     @Column(columnDefinition = "longtext")
     private String description;
 
-    @Column(columnDefinition = "int default 1")
-    private int status;
+    @Column(columnDefinition = "boolean default true")
+    private boolean status;
+
+    @Column(columnDefinition = "datetime")
+    private LocalDateTime deleteAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;

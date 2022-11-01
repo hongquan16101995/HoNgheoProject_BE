@@ -1,10 +1,12 @@
 package com.codegym.hongheo.core.service.auth;
 
+import com.codegym.hongheo.core.model.entity.User;
 import com.codegym.hongheo.core.security.UserDetail;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -43,15 +45,23 @@ public class JwtService {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty -> Message: {}", e);
         }
-
         return false;
     }
 
     public String getUsernameFromJwtToken(String token) {
-
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody().getSubject();
+    }
+
+    public Long getIdOfUserWithJwt() {
+        return ((UserDetail)(SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getId();
+    }
+
+    public User getUserWithJwt() {
+        User user = new User();
+        user.setId(getIdOfUserWithJwt());
+        return user;
     }
 }

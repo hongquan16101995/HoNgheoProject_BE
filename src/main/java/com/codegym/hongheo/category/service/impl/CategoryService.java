@@ -1,13 +1,17 @@
 package com.codegym.hongheo.category.service.impl;
 
+import com.codegym.hongheo.category.model.dto.CategoryDTO;
 import com.codegym.hongheo.category.model.entity.Category;
 import com.codegym.hongheo.category.repository.ICategoryRepository;
 import com.codegym.hongheo.category.service.ICategoryService;
-import com.codegym.hongheo.core.model.entity.User;
+import com.codegym.hongheo.core.mapper.ICategoryMapper;
+import com.codegym.hongheo.core.service.auth.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -15,33 +19,77 @@ public class CategoryService implements ICategoryService {
     @Autowired
     private ICategoryRepository iCategoryRepository;
 
+    @Autowired
+    private ICategoryMapper iCategoryMapper;
+
+    @Autowired
+    private JwtService jwtService;
+
     @Override
-    public List<Category> findAll() {
-        return iCategoryRepository.findAll();
+    public List<CategoryDTO> findAll() {
+        List<Category> categories = iCategoryRepository.findAllByNotDelete();
+        return iCategoryMapper.toDto(categories);
     }
 
     @Override
-    public Optional<Category> findById(Long id) {
-        return iCategoryRepository.findById(id);
+    public Optional<CategoryDTO> findById(Long id) {
+        Optional<Category> categoryOptional = iCategoryRepository.findById(id);
+        CategoryDTO categoryDTO = null;
+        if (categoryOptional.isPresent()
+                && categoryOptional.get().getDeleteAt() == null
+                && checkUserId(categoryOptional.get())) {
+            categoryDTO = iCategoryMapper.toDto(categoryOptional.get());
+        }
+        return Optional.ofNullable(categoryDTO);
     }
 
     @Override
-    public Category save(Category category) {
-        return iCategoryRepository.save(category);
+    public CategoryDTO save(CategoryDTO categoryDTO) {
+        if (categoryDTO.getId() != null) {
+            Optional<Category> categoryOptional = iCategoryRepository.findById(categoryDTO.getId());
+            if (!categoryOptional.isPresent() || categoryOptional.get().getDeleteAt() != null) {
+                return null;
+            }
+        }
+        Category category = iCategoryMapper.toEntity(categoryDTO);
+        category.setUser(jwtService.getUserWithJwt());
+        return iCategoryMapper.toDto(iCategoryRepository.save(category));
     }
 
     @Override
     public void remove(Long id) {
-        iCategoryRepository.deleteById(id);
+        Optional<Category> categoryOptional = iCategoryRepository.findById(id);
+        if (categoryOptional.isPresent() && checkUserId(categoryOptional.get())) {
+            categoryOptional.get().setDeleteAt(LocalDateTime.now());
+            iCategoryRepository.save(categoryOptional.get());
+        }
+    }
+
+
+    @Override
+    public List<CategoryDTO> findAllByUser() {
+        Long userId = jwtService.getIdOfUserWithJwt();
+        return iCategoryMapper.toDto(iCategoryRepository.findAllByUser(userId));
     }
 
     @Override
-    public List<Category> findAllByUser(User user) {
-        return iCategoryRepository.findAllByUser(user);
+    public List<CategoryDTO> findAllByUserAndStatus() {
+        Long userId = jwtService.getIdOfUserWithJwt();
+        return iCategoryMapper.toDto(iCategoryRepository.findAllByUserAndStatus(userId));
     }
 
     @Override
-    public List<Category> findAllByUserAndStatus(User user) {
-        return iCategoryRepository.findAllByUserAndStatus(user, 1);
+    public void isActive(Long id) {
+        Optional<Category> categoryOptional = iCategoryRepository.findById(id);
+        if (categoryOptional.isPresent()
+                && categoryOptional.get().getDeleteAt() == null
+                && checkUserId(categoryOptional.get())) {
+            categoryOptional.get().setStatus(!categoryOptional.get().isStatus());
+            iCategoryRepository.save(categoryOptional.get());
+        }
+    }
+
+    private boolean checkUserId(Category category) {
+        return Objects.equals(category.getUser().getId(), (jwtService.getIdOfUserWithJwt()));
     }
 }
